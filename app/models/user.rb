@@ -1,10 +1,5 @@
 class User < ActiveRecord::Base
-  after_create :refresh!
-
-  def refresh!
-    self.books = goodreads.shelf(goodreads_id, 'read', { sort: 'date_read', order: 'd', per_page: 2000})
-    self.save!
-  end
+  has_many :shelves
 
   def self.find_or_create_by_goodreads_id goodreads_id
     user = User.find_by(goodreads_id: goodreads_id) || create_user(goodreads_id)
@@ -14,7 +9,11 @@ class User < ActiveRecord::Base
     User.create(goodreads_id: goodreads_id)
   end
 
-  def goodreads
-    @client ||= Goodreads.new(api_key: APP_CONFIG['key'], api_secret: APP_CONFIG['secret'])
+  def shelf_for shelf_name
+    shelf = shelves.find_or_create_by(shelf: shelf_name)
+    return shelf if shelf.updated_at > 6.hours.ago
+
+    shelf.refresh!
+    shelf
   end
 end

@@ -17,3 +17,5 @@
 
 config/config.yml
 config/database.yml
+
+katon.log

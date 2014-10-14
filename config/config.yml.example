@@ -1,2 +1,6 @@
-key: 'key'
-secret: 'secret'
+default: &default
+  goodreads_key: 'key'
+  goodreads_secret: 'secret'
+
+development:
+  <<: *default
