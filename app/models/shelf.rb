@@ -11,7 +11,7 @@ class Shelf < ActiveRecord::Base
   private
 
   def update_data
-    goodreads.shelf(user.goodreads_id, shelf, { sort: 'date_read', order: 'd', per_page: 2000})['books']
+    goodreads.shelf(user.goodreads_id, shelf, { sort: 'date_read', order: 'd', per_page: 200})['books']
   end
 
   def goodreads

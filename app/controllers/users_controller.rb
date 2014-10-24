@@ -4,7 +4,8 @@ class UsersController < ActionController::Base
   # GET /users/13234.json?shelf=read
   # Shelves: read, currently-reading, to-read
   def show
-    render json: user.shelf_for(shelf).books
+    user_shelf.refresh! if params[:refresh] || params[:reload]
+    render json: user_shelf.books
   end
 
   private
@@ -15,5 +16,9 @@ class UsersController < ActionController::Base
 
   def shelf
     params[:shelf] || 'read'
+  end
+
+  def user_shelf
+    @user_shelf ||= user.shelf_for(shelf)
   end
 end
