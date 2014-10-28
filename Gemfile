@@ -11,3 +11,7 @@ group :development do
   gem 'spring'
   gem 'pry'
 end
+
+group :production do
+  gem 'unicorn'
+end
