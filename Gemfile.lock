@@ -53,6 +53,9 @@ GEM
     multi_json (1.10.1)
     netrc (0.7.7)
     oauth (0.4.7)
+    openlibrary (1.0.0)
+      json
+      rest-client
     pg (0.17.1)
     pry (0.10.0)
       coderay (~> 1.1.0)
@@ -108,6 +111,7 @@ PLATFORMS
 DEPENDENCIES
   goodreads
   jbuilder (~> 2.0)
+  openlibrary
   pg
   pry
   rails (= 4.1.6)

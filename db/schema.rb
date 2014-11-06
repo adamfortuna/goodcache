@@ -11,10 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141014004931) do
+ActiveRecord::Schema.define(version: 20141031015618) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "books", force: true do |t|
+    t.string "isbn"
+    t.string "title"
+    t.json   "genres"
+  end
+
+  add_index "books", ["isbn"], name: "index_books_on_isbn", using: :btree
 
   create_table "shelves", force: true do |t|
     t.datetime "created_at"

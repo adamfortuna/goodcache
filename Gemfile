@@ -6,6 +6,7 @@ gem 'rails', '4.1.6'
 gem 'pg'
 gem 'jbuilder', '~> 2.0'
 gem 'goodreads'
+gem 'openlibrary'
 
 group :development do
   gem 'spring'
