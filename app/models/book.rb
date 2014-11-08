@@ -1,4 +1,6 @@
 class Book < ActiveRecord::Base
+  validates :isbn, uniqueness: true, presence: true
+  validates :title, presence: true
   
   def self.find_create_by_title_and_isbn title, isbn
 

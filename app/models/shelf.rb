@@ -4,21 +4,19 @@ class Shelf < ActiveRecord::Base
 
   # Lookup a book from a specific users shelf by ISBN
   def book_by_isbn isbn
-    self.books.find do |book|
+    books.find do |book|
       book['book']['isbn'] == params[:id]
     end
   end
 
   # Grab the latest data from Goodreads
   def refresh!
-    self.books = update_data
-    self.save!
+    update_attribute(:books, update_data)
   end
 
   # Get genres for all books
   def annotate_books!
-    annotate_books
-    self.save!
+    update_attribute(:books, annotated_books)
   end
 
   private
@@ -32,10 +30,13 @@ class Shelf < ActiveRecord::Base
     @client ||= Goodreads.new(api_key: APP_CONFIG['goodreads_key'], api_secret: APP_CONFIG['goodreads_secret'])
   end
 
-  def annotate_books
-    self.books.each do |book|
-      b = Book.find_create_by_title_and_isbn(book['book']['title'], book['book']['isbn'])
-      book['book']['genres'] = b.genres
+  def annotated_books
+    update_data.collect do |book|
+      if book['book']['isbn'] && book['book']['title']
+        b = Book.find_create_by_title_and_isbn(book['book']['title'], book['book']['isbn'])
+        book['book']['genres'] = b.genres
+      end
+      book
     end
   end
 end
