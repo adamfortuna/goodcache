@@ -32,19 +32,10 @@ class Shelf < ActiveRecord::Base
     @client ||= Goodreads.new(api_key: APP_CONFIG['goodreads_key'], api_secret: APP_CONFIG['goodreads_secret'])
   end
 
-  def isbns
-    @isbns ||= self.books.collect { |book| book['book']['isbn'] }
-  end
-
   def annotate_books
-    found_isbns = Book.where(isbn: isbns).select(:isbn).collect(&:isbn)
-    missing_isbns = isbns - found_isbns
-
     self.books.each do |book|
-      if missing_isbns.include?(book['book']['isbn'])
-        b = Book.find_create_by_title_and_isbn(book['book']['title'], book['book']['isbn'])
-        book['book']['genres'] = b.genres
-      end
+      b = Book.find_create_by_title_and_isbn(book['book']['title'], book['book']['isbn'])
+      book['book']['genres'] = b.genres
     end
   end
 end
