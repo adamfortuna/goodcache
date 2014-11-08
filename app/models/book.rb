@@ -1,6 +1,6 @@
 class Book < ActiveRecord::Base
   
-  def self.find_create_by_isbn title, isbn
+  def self.find_create_by_title_and_isbn title, isbn
 
     if book = Book.find_by(isbn: isbn)
       return book

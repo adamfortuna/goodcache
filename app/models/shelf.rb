@@ -1,17 +1,29 @@
 class Shelf < ActiveRecord::Base
   belongs_to :user
-
   after_create :refresh!
 
-  before_save :create_books, if: :books_changed?
+  # Lookup a book from a specific users shelf by ISBN
+  def book_by_isbn isbn
+    self.books.find do |book|
+      book['book']['isbn'] == params[:id]
+    end
+  end
 
+  # Grab the latest data from Goodreads
   def refresh!
-    self.books  = update_data
+    self.books = update_data
+    self.save!
+  end
+
+  # Get genres for all books
+  def annotate_books!
+    annotate_books
     self.save!
   end
 
   private
 
+  # Todo: Make this work with more than 200 books
   def update_data
     goodreads.shelf(user.goodreads_id, shelf, { sort: 'date_read', order: 'd', per_page: 200})['books']
   end
@@ -20,11 +32,19 @@ class Shelf < ActiveRecord::Base
     @client ||= Goodreads.new(api_key: APP_CONFIG['goodreads_key'], api_secret: APP_CONFIG['goodreads_secret'])
   end
 
-  def create_books
-    self.books.each do |book|
-      b = Book.find_create_by_isbn(book['book']['title'], book['book']['isbn'])
+  def isbns
+    @isbns ||= self.books.collect { |book| book['book']['isbn'] }
+  end
 
-      book['book']['genres'] = b.genres
+  def annotate_books
+    found_isbns = Book.where(isbn: isbns).select(:isbn).collect(&:isbn)
+    missing_isbns = isbns - found_isbns
+
+    self.books.each do |book|
+      if missing_isbns.include?(book['book']['isbn'])
+        b = Book.find_create_by_title_and_isbn(book['book']['title'], book['book']['isbn'])
+        book['book']['genres'] = b.genres
+      end
     end
   end
 end
