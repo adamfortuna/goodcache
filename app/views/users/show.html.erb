@@ -26,7 +26,7 @@
     <script>
       angular.module('Scribe').config(['settingsProvider', function config(settingsProvider) {
         settingsProvider.setId(<%= @user_id %>);
-        settingsProvider.setApiUrl('http://goodcache.herokuapp.com');
+        settingsProvider.setApiUrl('<%= APP_CONFIG['api_url'] || "http://goodcache.herokuapp.com" %>');
       }]);
     </script>
   </body>
