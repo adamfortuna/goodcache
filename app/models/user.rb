@@ -7,11 +7,11 @@ class User < ActiveRecord::Base
   def refresh!
     return true unless goodinfo
     update_attribute(:name, goodinfo['name'])
-    goodinfo['user_shelves'].each do |shelf|
-      if shelf = shelves.find_by(shelf: shelf['name'])
+    goodinfo['user_shelves'].each do |shelf_info|
+      if shelf = shelves.find_by(shelf: shelf_info['name'])
         shelf.refresh!
       else
-        shelves.find_or_create_by(shelf: shelf['name'])
+        shelves.find_or_create_by(shelf: shelf_info['name'])
       end
     end
   end
