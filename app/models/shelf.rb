@@ -1,6 +1,5 @@
 class Shelf < ActiveRecord::Base
   belongs_to :user
-  after_create :refresh!
 
   # Lookup a book from a specific users shelf by ISBN
   def book_by_isbn isbn
@@ -11,12 +10,19 @@ class Shelf < ActiveRecord::Base
 
   # Grab the latest data from Goodreads
   def refresh!
-    update_attribute(:books, update_data)
+    update_attributes(
+      books: update_data,
+      books_count: update_data.length
+    )
   end
 
   # Get genres for all books
   def annotate_books!
     update_attribute(:books, annotated_books)
+  end
+
+  def needs_refresh?
+    books.nil? || (updated_at < 6.hours.ago)
   end
 
   private

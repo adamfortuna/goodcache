@@ -6,13 +6,13 @@ class User < ActiveRecord::Base
 
   def refresh!
     return true unless goodinfo
+
+    # Set the users name from Goodreads
     update_attribute(:name, goodinfo['name'])
-    goodinfo['user_shelves'].each do |shelf_info|
-      if shelf = shelves.find_by(shelf: shelf_info['name'])
-        shelf.refresh!
-      else
-        shelves.find_or_create_by(shelf: shelf_info['name'])
-      end
+
+    # Create all their shelves with the number of books on each
+    goodinfo['user_shelves'].each do |shelf|
+      shelves.find_or_create_by(shelf: shelf['name'], books_count: shelf['book_count'])
     end
   end
 

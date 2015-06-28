@@ -2,7 +2,7 @@ class UserBooksController < ActionController::Base
   before_filter :refresh_shelf
   respond_to :json
 
-  # GET /users/:user_id/books.json?shelf=read  
+  # GET /users/:user_id/books.json?shelf=read
   #   force a reload with ?reload=true or ?refresh=true
   def index
     render json: user_shelf.books
@@ -30,6 +30,6 @@ class UserBooksController < ActionController::Base
   end
 
   def refresh_shelf
-    user_shelf.refresh! if params[:refresh] || params[:reload]
+    user_shelf.refresh! if params[:refresh] || params[:reload] || user_shelf.needs_refresh?
   end
 end
