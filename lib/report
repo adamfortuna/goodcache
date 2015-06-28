@@ -1,0 +1,27 @@
+require 'csv'
+
+
+csv = CSV.generate do |csv|
+  csv << ["Title", "Rating", "Pages", "Date Started", "Date Finished", "Days to Read", "Pages Per Day"]
+
+  reviews.each do |review|
+    if review['started_at'] && review['read_at']
+      started = Date.parse(review['started_at'])
+      finished = Date.parse(review['read_at'])
+      diff = (finished - started).to_i
+
+      pages = review['book']['num_pages'].to_i
+      if diff == 0
+        pages_per_day = pages
+      else
+        pages_per_day = pages/diff
+      end
+
+      csv << [review['book']['title'], review['rating'], pages, started.to_s, finished.to_s, diff, pages_per_day]
+    end
+  end
+end
+
+
+
+puts csv

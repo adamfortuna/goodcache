@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141031015618) do
+ActiveRecord::Schema.define(version: 20150628031320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20141031015618) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "goodreads_id"
+    t.string   "name"
   end
 
 end

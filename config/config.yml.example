@@ -1,6 +1,10 @@
 default: &default
   goodreads_key: 'key'
   goodreads_secret: 'secret'
+  api_url: 'http://api.scribe.ka'
+  script_url: 'http://adamfortuna.github.io/scribe/dist/scribe.min.js'
 
 development:
   <<: *default
+  api_url: 'http://localhost:3000'
+  script_url: 'http://localhost:4000/dist/scribe.js'
