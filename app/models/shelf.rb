@@ -1,13 +1,6 @@
 class Shelf < ActiveRecord::Base
   belongs_to :user
 
-  # Lookup a book from a specific users shelf by ISBN
-  def book_by_isbn isbn
-    books.find do |book|
-      book['book']['isbn'] == params[:id]
-    end
-  end
-
   # Grab the latest data from Goodreads
   def refresh!
     update_attributes(

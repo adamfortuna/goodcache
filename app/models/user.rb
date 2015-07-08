@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
   has_many :shelves, dependent: :destroy
+  has_many :user_books, dependent: :destroy
+  has_many :books, through: :user_books
   validates :goodreads_id, uniqueness: true
 
   after_create :refresh!
@@ -9,11 +11,22 @@ class User < ActiveRecord::Base
 
     # Set the users name from Goodreads
     update_attribute(:name, goodinfo['name'])
+    touch(:updated_at)
 
     # Create all their shelves with the number of books on each
-    goodinfo['user_shelves'].each do |shelf|
-      shelves.find_or_create_by(shelf: shelf['name'], books_count: shelf['book_count'])
+    goodinfo['user_shelves'].each do |shelf_info|
+      shelf = shelves.find_or_initialize_by(shelf: shelf_info['name'])
+      shelf.books_count = shelf_info['book_count']
+      shelf.save
     end
+  end
+
+  # Lookup a book from a specific users shelf by ISBN
+  def book_by_isbn isbn
+    book = Book.find_create_by_isbn isbn
+    review = user_books.find_or_create_by(user: self, book: book)
+    review.refresh! if review.needs_refresh?
+    review.review
   end
 
   private

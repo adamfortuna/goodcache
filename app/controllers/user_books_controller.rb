@@ -8,10 +8,10 @@ class UserBooksController < ActionController::Base
     render json: user_shelf.books
   end
 
-  # GET /users/:user_id/books/:id.json?shelf=read
+  # GET /users/:user_id/books/:id.json
   #   force a reload with ?reload=true or ?refresh=true
   def show
-    render json: user_shelf.book_by_isbn(params[:id])
+    render json: user.book_by_isbn(params[:id])
   end
 
   private
