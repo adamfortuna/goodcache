@@ -1,7 +1,8 @@
 class Book < ActiveRecord::Base
   has_many :user_books, dependent: :destroy
   has_many :users, through: :user_books
-  validates :isbn, uniqueness: true, presence: true
+  validates :isbn, uniqueness: true
+  validates :goodreads_id, uniqueness: true
   validates :title, presence: true
 
   def self.find_create_by_title_and_isbn title, isbn
@@ -33,7 +34,16 @@ class Book < ActiveRecord::Base
     end
 
     book = goodreads.book_by_isbn(isbn)
-    Book.create(isbn: isbn, title: book.title)
+    Book.create(isbn: isbn, goodreads_id: book['id'], title: book.title)
+  end
+
+  def self.find_create_by_goodreads_id goodreads_id
+    if book = Book.find_by(goodreads_id: goodreads_id)
+      return book
+    end
+
+    book = goodreads.book(goodreads_id)
+    Book.create(isbn: book.isbn, goodreads_id: book.id, title: book.title)
   end
 
   private

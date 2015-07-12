@@ -29,6 +29,13 @@ class User < ActiveRecord::Base
     review.review
   end
 
+  def book_by_goodreads_id goodreads_id
+    book = Book.find_create_by_goodreads_id goodreads_id
+    review = user_books.find_or_create_by(user: self, book: book)
+    review.refresh! if review.needs_refresh?
+    review.review
+  end
+
   private
 
   def goodreads
