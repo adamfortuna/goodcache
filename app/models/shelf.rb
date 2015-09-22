@@ -22,7 +22,25 @@ class Shelf < ActiveRecord::Base
 
   # Todo: Make this work with more than 200 books
   def update_data
-    goodreads.shelf(user.goodreads_id, shelf, { sort: 'date_read', order: 'd', per_page: 200})['books']
+    return @update_data if @update_data
+    page = 1
+    @update_data = []
+
+    loop do
+      result = goodreads.shelf(user.goodreads_id, shelf, { sort: 'date_read', order: 'd', per_page: 20, page: page })
+      found_books = result['total']
+      currently_processed_books = (page * 20)
+      puts "Found #{found_books} books. Looking at page #{page}, total processed: #{currently_processed_books}"
+      @update_data << result['books']
+      break if currently_processed_books >= found_books
+      page = page + 1
+    end
+
+    @update_data ||= @update_data.flatten
+  end
+
+  def method_name
+
   end
 
   def goodreads
