@@ -36,7 +36,7 @@ class Shelf < ActiveRecord::Base
       page = page + 1
     end
 
-    @update_data ||= @update_data.flatten
+    @update_data = @update_data.flatten
   end
 
   def method_name
