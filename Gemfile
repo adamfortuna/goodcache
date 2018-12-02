@@ -1,13 +1,14 @@
 source 'https://rubygems.org'
 
-ruby '2.1.5'
+ruby '2.3.1'
 
 gem 'rails', '~> 4.1'
-gem 'pg'
+gem 'pg', '~> 0.18'
 gem 'jbuilder', '~> 2.0'
-gem 'goodreads'
+gem 'goodreads', '~> 0.6.2'
 gem 'openlibrary'
 gem 'bootstrap-sass'
+gem 'responders', '~> 2.0'
 
 group :development do
   gem 'spring'

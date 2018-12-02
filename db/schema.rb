@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20150712013240) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "books", force: true do |t|
+  create_table "books", force: :cascade do |t|
     t.string  "isbn"
     t.string  "title"
     t.json    "genres"
@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 20150712013240) do
 
   add_index "books", ["isbn"], name: "index_books_on_isbn", using: :btree
 
-  create_table "shelves", force: true do |t|
+  create_table "shelves", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20150712013240) do
     t.integer  "books_count", default: 0
   end
 
-  create_table "user_books", force: true do |t|
+  create_table "user_books", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20150712013240) do
     t.json     "review"
   end
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "goodreads_id"
